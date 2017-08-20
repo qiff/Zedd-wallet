@@ -1,0 +1,6 @@
+[submodule "Zedd"]
+	path = Zedd
+	url = https://github.com/qiff/Zedd
+[submodule "cryptonote"]
+	path = cryptonote
+	url = https://github.com/qiff/Zedd

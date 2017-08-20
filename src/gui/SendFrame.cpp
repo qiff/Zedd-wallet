@@ -13,6 +13,8 @@
 
 #include "ui_sendframe.h"
 
+#include "boost/lexical_cast.hpp"
+
 namespace WalletGui {
 
 SendFrame::SendFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::SendFrame) {
@@ -26,6 +28,7 @@ SendFrame::SendFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::SendFrame
     Qt::QueuedConnection);
 
   m_ui->m_tickerLabel->setText(CurrencyAdapter::instance().getCurrencyTicker().toUpper());
+  m_ui->m_feeEdit->setText(QString::number(CurrencyAdapter::instance().getMinimumFee() / pow(10, CurrencyAdapter::instance().getNumberOfDecimalPlaces())));
 }
 
 SendFrame::~SendFrame() {
@@ -82,7 +85,8 @@ void SendFrame::sendClicked() {
     }
   }
 
-  quint64 fee = CurrencyAdapter::instance().getMinimumFee();
+  double fee_raw = m_ui->m_feeEdit->text().toFloat() * (double)pow(10, CurrencyAdapter::instance().getNumberOfDecimalPlaces());
+  qint64 fee = static_cast<qint64>(fee_raw);
   if (WalletAdapter::instance().isOpen()) {
     WalletAdapter::instance().sendTransaction(walletTransfers, fee, m_ui->m_paymentIdEdit->text(), m_ui->m_mixinSlider->value());
   }
